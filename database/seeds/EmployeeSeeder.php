@@ -41,7 +41,9 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         foreach ($this->employees as $item) {
-            Employee::Create($item);
+			$emp = new Employee;
+			$emp->fill($item);
+			$emp->save();
         }
     }
 }
