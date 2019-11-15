@@ -1,4 +1,4 @@
-@extends('layouts.main');
+@extends('layouts.main')
 
 @section('title')
 Employee Bonuses and Deductions
