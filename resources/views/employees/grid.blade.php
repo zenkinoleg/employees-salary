@@ -7,8 +7,10 @@
 		<th>Age</th>
 		<th>Kids</th>
 		<th>Rent Car</th>
+		<th>A Smoker</th>
 		<th>Salary Rate</th>
-		<th>Salary Main Plan</th>
+		<th>Main Plan</th>
+		<th>Tax Plan</th>
 		<th>Actions</th>
 	</tr>
 	</thead>
@@ -21,8 +23,10 @@
 		<td>{{$item->age}}</td>
 		<td>{{$item->kids_human}}</td>
 		<td>{{$item->rent_car_human}}</td>
+		<td>{{$item->smoker_human}}</td>
 		<td>{{$item->salary}}</td>
 		<td>{{$item->salary_main_plan}}</td>
+		<td>{{$item->salary_taxes_only_plan}}</td>
         <td>
 		@if($item->permanent)
 			<a href="#" class="btn btn-success btn-sm permanent_rec">Permanent</a>

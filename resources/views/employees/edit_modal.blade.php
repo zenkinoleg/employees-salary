@@ -16,6 +16,7 @@
 			@include('employees/field_birthday')
 			@include('employees/field_salary')
 			@include('employees/field_rent_car')
+			@include('employees/field_smoker')
 			@include('employees/field_kids')
 			<input id="csrf_token" type="hidden" value="{{csrf_token()}}" />
 			<input name="id" id="rec_id" type="hidden" value="" />

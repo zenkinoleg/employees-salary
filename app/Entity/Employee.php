@@ -47,16 +47,24 @@ class Employee extends Model
             'salary' => [ 'required', 'numeric', 'min:0.01' ],
             'birthday' => [ 'required', 'date' ],
             'kids' => [ 'integer', 'min:0' ],
-            'rent_car' => [ 'integer', 'min:0', 'digits_between:0,1' ]
+            'rent_car' => [ 'integer', 'min:0', 'digits_between:0,1' ],
+            'smoker' => [ 'integer', 'min:0', 'digits_between:0,1' ]
         ];
     }
 
     /**
      * Salary Main Plan calculator object
      *
-     * @var App\Salary\MainPlan
+     * @var App\Salary\SalaryMainPlan
     */
     private $salaryMainPlan;
+
+    /**
+     * Salary Taxes Only Plan calculator object
+     *
+     * @var App\Salary\SalaryTaxesOnlyPlan
+    */
+    private $salaryTaxesOnlyPlan;
 
     /**
      * Since Laraval does not allow to inject services into Model objects
@@ -65,6 +73,7 @@ class Employee extends Model
     public function __construct()
     {
         $this->salaryMainPlan = resolve(\App\Salary\SalaryMainPlan::class);
+        $this->salaryTaxesOnlyPlan = resolve(\App\Salary\SalaryTaxesOnlyPlan::class);
     }
 
     /**
@@ -126,6 +135,16 @@ class Employee extends Model
     }
 
     /**
+     * Custom property. If an employee is a smoker. Humanized
+     *
+     * @return string
+     */
+    public function getSmokerHumanAttribute()
+    {
+        return YesNoList::LIST[$this->smoker];
+    }
+
+    /**
      * Custom property. Calculte total salary amount by summarizing
      * all bonuses and deductions included in current plan.
      * One of the beauty in here is that we have our SalaryMainPlan calculator
@@ -140,4 +159,18 @@ class Employee extends Model
         // Example 3500.95
         return number_format($salaryTotal, 2, '.', '');
     }
+
+    /**
+     * Custom property. Calculte SalaryTaxesOnly plan
+     *
+     * @return number
+     */
+    public function getSalaryTaxesOnlyPlanAttribute()
+    {
+        $salaryTotal = $this->salary + $this->salaryTaxesOnlyPlan->calculate($this);
+
+        // Example 3500.95
+        return number_format($salaryTotal, 2, '.', '');
+    }
+
 }
