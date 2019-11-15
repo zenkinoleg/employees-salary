@@ -6,28 +6,34 @@ Employee Bonuses and Deductions
 
 @section('content')
 
-    <div class="row">
+    <div class="row mb-3">
 		<p>
 		Laravel based solution presents how to have agile and expandable system of bonuses and deductions to calculate employee's salary.
 		Application releases a Strategy Pattern what makes such system possible and yet simple.
 		</p>
 	</div>
 
-	<h2>Backend</h2>
-    <div class="row">
+	<h4>Theory</h4>
+    <div class="row mb-3">
 		<ul>
-			<li class="text-primary">Laravel 6.x</li>
-			<li class="text-success">Strategy Pattern</li>
+			<li class="text-danger">Strategy Pattern <a href="https://github.com/zenkinoleg/employees-salary/tree/master/app/Salary" target="blank">Code Snippet</a></li>
 		</ul>
 	</div>
 
-	<h2>Frontend</h2>
+	<h4>Backend</h4>
+    <div class="row mb-3">
+		<ul>
+			<li class="text-success">Laravel 6.x</li>
+		</ul>
+	</div>
+
+	<h4>Frontend</h4>
     <div class="row">
 		<ul>
-			<li>jQuery</li>
-			<li>Twitter Bootstrap 4.x</li>
-			<li>Date Table 1.10.x</li>
-			<li>Sweet Alert 2</li>
+			<li class="text-primary">jQuery</li>
+			<li class="text-primary">Twitter Bootstrap 4.x</li>
+			<li class="text-primary">Date Table 1.10.x</li>
+			<li class="text-primary">Sweet Alert 2</li>
 		</ul>
 	</div>
 
