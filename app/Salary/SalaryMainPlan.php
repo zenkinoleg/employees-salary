@@ -3,30 +3,25 @@
 namespace App\Salary;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Salary\SalaryVirtualPlan;
 
 /**
- * Represents Main Company Salary Plan
- * Contains the whole list of bonuses and deductions related to it
+ * Main Salary Plan
+ *
+ *  - bonus: reaching age of fifty
+ *  - bonus: three kids
+ *  - deduction: common country tax
+ *  - deduction: rent car from company
  */
-final class SalaryMainPlan
+final class SalaryMainPlan extends SalaryVirtualPlan
 {
     /**
-     * Represents set of bonuses and deductions tags refering to Class releases them accordingly
+     * Bonuses belong to current plan.
     */
-    private $bonuses = [
-        'age' => Strategy\SalaryBonusAgeFifty::class,
+    protected $bonuses = [
+        'age_fifty' => Strategy\SalaryBonusAgeFifty::class,
         'three_kids' => Strategy\SalaryBonusThreeKids::class,
         'country_tax' => Strategy\SalaryDeductCountryTax::class,
         'car_rent' => Strategy\SalaryDeductCarRent::class
     ];
-
-    public function calculate(Model $employee) : float
-    {
-        $result = 0;
-        foreach ($this->bonuses as $tag => $classname) {
-            $result += (new $classname)->getBonus($employee);
-        }
-
-        return $result;
-    }
 }
