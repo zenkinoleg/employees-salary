@@ -22,8 +22,9 @@ abstract class SalaryVirtualPlan
     /**
      * Calculate all bonuses defined in @bonuses
      *
-     * @param Illuminate\Database\Eloquent\Model
-     * @return string
+     * @param  \Illuminate\Database\Eloquent\Model  $employee
+     *
+     * @return float
      */
     public function calculate(Model $employee) : float
     {

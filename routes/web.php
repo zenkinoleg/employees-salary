@@ -1,17 +1,14 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+/**
+ * @var \Illuminate\Routing\Router $router
+ */
 
+/**
+ * Home and About pages
+ */
 $router->redirect('/','/employees');
+$router->get('/about', 'IndexController@about');
 
 /**
  * Employees
@@ -21,12 +18,8 @@ $router->get('/employees', 'EmployeeController@all');
 $router->get('/employees/{id}', 'EmployeeController@edit')
 	->where('id','[\d]+');
 
-$router->post('/employees/save', 'EmployeeController@save');
+$router->post('/employees/save', 'EmployeeController@store');
 
-$router->get('/employees/delete/{id}', 'EmployeeController@delete')
+$router->get('/employees/delete/{id}', 'EmployeeController@destroy')
 	->where('id','[\d]+');
 
-/**
- * About
- */
-$router->get('/about', 'IndexController@about');

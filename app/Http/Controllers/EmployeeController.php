@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+
 use App\Entity\Employee;
 use App\Enum\YesNoList;
 
@@ -13,7 +15,13 @@ use App\Enum\YesNoList;
  */
 class EmployeeController extends Controller
 {
-    const MODEL = \App\Entity\Employee::class;
+    /** @var \App\Entity\Employee */
+    private $employee;
+
+    public function __construct(Employee $employee)
+    {
+        $this->employee = $employee;
+    }
 
     /**
      * List of all Employees
@@ -23,7 +31,7 @@ class EmployeeController extends Controller
     public function all()
     {
         return view('employees/index', [
-            'model' => (self::MODEL)::all(),
+            'model' => $this->employee->all(),
             'yesno_list' => YesNoList::LIST
         ]);
     }
@@ -31,42 +39,52 @@ class EmployeeController extends Controller
     /**
      * Get Employee record.
      *
-     * @return Json|Redirect
+     * @param $id
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function edit($id)
     {
-        $model = (self::MODEL)::findOrFail($id);
+        $model = $this->employee->findOrFail($id);
         if ($model->permanent) {
             abort('403');
         }
 
-        return $model->toJson();
+        return response()->json($model);
     }
 
     /**
      * Save Employee record.
      *
-     * @return void|Redirect
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function save(Request $request)
+    public function store(Request $request)
     {
         $id = $request->input('id', 0);
-        $model = $id ? (self::MODEL)::findOrFail($id) : new Employee;
-        $this->validate($request, (self::MODEL)::rules($id));
+        $model = $id ? $this->employee->findOrFail($id) : new Employee;
+        $this->validate($request, ($this->employee)::rules($id));
         $model->fill(
             $request->except('_token')
         );
         $model->save();
+
+        return response()->json($model);
     }
 
     /**
      * Delete Employee record.
      *
-     * @return Redirect
+     * @param $id
+     *
+     * @throws \Exception
+     * @return \Redirect
      */
-    public function delete($id)
+    public function destroy($id)
     {
-        $model = (self::MODEL)::findOrFail($id);
+        $model = $this->employee->findOrFail($id);
         if ($model->permanent) {
             abort('403');
         }

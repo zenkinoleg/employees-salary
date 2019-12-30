@@ -2,15 +2,22 @@
 
 namespace App\Entity;
 
+use App\Salary\SalaryMainPlan;
+use App\Salary\SalaryTaxesOnlyPlan;
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use App\Enum\YesNoList;
 
 /**
- * Many programmers misinterpret Eloquent Model class. They think this is just a persistance layer of data
- * But it's not. This is where you keep all your Business Logic related to the current Enitity. In fact,
- * this is a Business Unit. If you don't like Active Record "Anti-Pattern" which Eloquent releases, well
- * just don't use it, go pure and wild and do what you want, but since we pick Laravel we gonna use all
- * benefits it provides.
+ * Class Employee
+ * @mixin Eloquent
+ *
+ * @property mixed birthday
+ * @property double salary
+ * @property mixed smoker
+ * @property mixed kids
+ * @property mixed rent_car
+ * @property mixed permanent
  */
 class Employee extends Model
 {
@@ -26,7 +33,10 @@ class Employee extends Model
      *
      * @var array
      */
-    protected $guarded = [ 'id', 'permanent' ];
+    protected $guarded = [
+        'id',
+        'permanent'
+    ];
 
     /**
      * Indicates if the model should be timestamped.
@@ -38,42 +48,69 @@ class Employee extends Model
     /**
      * Validate fields.
      *
+     * @param $id integer
+     *
      * @return array
      */
     public static function rules($id): array
     {
         return [
-            'name' => [ 'required', 'string', 'max:64', "unique:employees,name,$id" ],
-            'salary' => [ 'required', 'numeric', 'min:0.01' ],
-            'birthday' => [ 'required', 'date' ],
-            'kids' => [ 'integer', 'min:0' ],
-            'rent_car' => [ 'integer', 'min:0', 'digits_between:0,1' ],
-            'smoker' => [ 'integer', 'min:0', 'digits_between:0,1' ]
+            'name' => [
+                'required',
+                'string',
+                'max:64',
+                "unique:employees,name,$id",
+            ],
+            'salary' => [
+                'required',
+                'numeric',
+                'min:0.01',
+            ],
+            'birthday' => [
+                'required',
+                'date',
+            ],
+            'kids' => [
+                'integer',
+                'min:0',
+            ],
+            'rent_car' => [
+                'integer',
+                'min:0',
+                'digits_between:0,1',
+            ],
+            'smoker' => [
+                'integer',
+                'min:0',
+                'digits_between:0,1',
+            ]
         ];
     }
 
     /**
      * Salary Main Plan calculator object
      *
-     * @var App\Salary\SalaryMainPlan
+     * @var \App\Salary\SalaryMainPlan
     */
     private $salaryMainPlan;
 
     /**
      * Salary Taxes Only Plan calculator object
      *
-     * @var App\Salary\SalaryTaxesOnlyPlan
+     * @var \App\Salary\SalaryTaxesOnlyPlan
     */
     private $salaryTaxesOnlyPlan;
 
     /**
-     * Since Laraval does not allow to inject services into Model objects
+     * Since Laravel does not allow to inject services into Model objects
      * we use global helper resolve() to get an instance of needed service.
     */
     public function __construct()
     {
-        $this->salaryMainPlan = resolve(\App\Salary\SalaryMainPlan::class);
-        $this->salaryTaxesOnlyPlan = resolve(\App\Salary\SalaryTaxesOnlyPlan::class);
+        parent::__construct();
+
+        $this->salaryMainPlan = resolve(SalaryMainPlan::class);
+        $this->salaryTaxesOnlyPlan = resolve(SalaryTaxesOnlyPlan::class);
     }
 
     /**
@@ -89,7 +126,7 @@ class Employee extends Model
                 now()->toDateTimeString()
             )
         );
-   
+
         return (int) $interval->format('%y');
     }
 
@@ -100,7 +137,6 @@ class Employee extends Model
      */
     public function getKidsHumanAttribute()
     {
-        $result = '';
         switch ($this->kids) {
             case 0:
                 $result = 'No Kids';
@@ -145,32 +181,40 @@ class Employee extends Model
     }
 
     /**
-     * Custom property. Calculte total salary amount by summarizing
+     * Custom property. Calculate total salary amount by summarizing
      * all bonuses and deductions included in current plan.
      * One of the beauty in here is that we have our SalaryMainPlan calculator
      * injected right into the Eloquent Model dynamic attribute
      *
-     * @return number
+     * @return number|string
      */
     public function getSalaryMainPlanAttribute()
     {
-        $salaryTotal = $this->salary + $this->salaryMainPlan->calculate($this);
-
-        // Example 3500.95
-        return number_format($salaryTotal, 2, '.', '');
+        return $this->formatSalarySting(
+            $this->salary + $this->salaryMainPlan->calculate($this)
+        );
     }
 
     /**
-     * Custom property. Calculte SalaryTaxesOnly plan
+     * Custom property. Calculate SalaryTaxesOnly plan
      *
-     * @return number
+     * @return number|string
      */
     public function getSalaryTaxesOnlyPlanAttribute()
     {
-        $salaryTotal = $this->salary + $this->salaryTaxesOnlyPlan->calculate($this);
-
-        // Example 3500.95
-        return number_format($salaryTotal, 2, '.', '');
+        return $this->formatSalarySting(
+            $this->salary + $this->salaryTaxesOnlyPlan->calculate($this)
+        );
     }
 
+    /**
+     * @param  float  $value
+     *
+     * @return string
+     */
+    private function formatSalarySting(float $value)
+    {
+        // Example 3500.95
+        return number_format($value, 2, '.', '');
+    }
 }
