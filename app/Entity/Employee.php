@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Salary\SalaryMainPlan;
-use App\Salary\SalaryTaxesOnlyPlan;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Salary\SalaryMainPlan;
+use App\Salary\SalaryTaxesOnlyPlan;
 use App\Enum\YesNoList;
+
 
 /**
  * Class Employee
@@ -88,14 +90,14 @@ class Employee extends Model
     }
 
     /**
-     * Salary Main Plan calculator object
+     * Salary Main Plan calculator object.
      *
      * @var \App\Salary\SalaryMainPlan
     */
     private $salaryMainPlan;
 
     /**
-     * Salary Taxes Only Plan calculator object
+     * Salary Taxes Only Plan calculator object.
      *
      * @var \App\Salary\SalaryTaxesOnlyPlan
     */
@@ -114,7 +116,7 @@ class Employee extends Model
     }
 
     /**
-     * Custom property. Age of employee in years
+     * Custom property. Age of employee in years.
      *
      * @return integer
      */
@@ -131,7 +133,7 @@ class Employee extends Model
     }
 
     /**
-     * Custom property. How many kids employee have. Humanized
+     * Custom property. How many kids employee have. Humanized.
      *
      * @return string
      */
@@ -161,7 +163,7 @@ class Employee extends Model
     }
 
     /**
-     * Custom property. If employee use company's car. Humanized
+     * Custom property. If employee use company's car. Humanized.
      *
      * @return string
      */
@@ -171,7 +173,7 @@ class Employee extends Model
     }
 
     /**
-     * Custom property. If an employee is a smoker. Humanized
+     * Custom property. If an employee is a smoker. Humanized.
      *
      * @return string
      */
@@ -184,7 +186,7 @@ class Employee extends Model
      * Custom property. Calculate total salary amount by summarizing
      * all bonuses and deductions included in current plan.
      * One of the beauty in here is that we have our SalaryMainPlan calculator
-     * injected right into the Eloquent Model dynamic attribute
+     * injected right into the Eloquent Model dynamic attribute.
      *
      * @return number|string
      */
