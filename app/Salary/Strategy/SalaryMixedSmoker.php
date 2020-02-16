@@ -19,5 +19,6 @@ class SalaryMixedSmoker implements SalaryBonusInterface
     public function getBonus(Model $employee) : float
     {
         return $employee->smoker ? -500 : 300;
+
     }
 }

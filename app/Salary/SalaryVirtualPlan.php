@@ -14,7 +14,7 @@ abstract class SalaryVirtualPlan
      * bonuses/deduction/mixed to be calculated altogether
      *
      * @var array
-    */
+     */
     protected $bonuses = [
 //      'tagName' => '\App\Somewhere\Where\Your\Class\Is';
     ];
@@ -26,11 +26,13 @@ abstract class SalaryVirtualPlan
      *
      * @return float
      */
-    public function calculate(Model $employee) : float
+    public function calculate(Model $employee): float
     {
         $result = 0;
         foreach ($this->bonuses as $tag => $classname) {
-            $result += (new $classname)->getBonus($employee);
+            /** @var \App\Salary\SalaryBonusInterface $bonus */
+            $bonus  = (new $classname);
+            $result += $bonus->getBonus($employee);
         }
 
         return $result;

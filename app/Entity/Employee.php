@@ -12,8 +12,8 @@ use App\Enum\YesNoList;
 
 /**
  * Class Employee
- * @mixin Eloquent
  *
+ * @mixin Eloquent
  * @property mixed birthday
  * @property double salary
  * @property mixed smoker
@@ -37,7 +37,7 @@ class Employee extends Model
      */
     protected $guarded = [
         'id',
-        'permanent'
+        'permanent',
     ];
 
     /**
@@ -57,13 +57,13 @@ class Employee extends Model
     public static function rules($id): array
     {
         return [
-            'name' => [
+            'name'     => [
                 'required',
                 'string',
                 'max:64',
                 "unique:employees,name,$id",
             ],
-            'salary' => [
+            'salary'   => [
                 'required',
                 'numeric',
                 'min:0.01',
@@ -72,7 +72,7 @@ class Employee extends Model
                 'required',
                 'date',
             ],
-            'kids' => [
+            'kids'     => [
                 'integer',
                 'min:0',
             ],
@@ -81,11 +81,11 @@ class Employee extends Model
                 'min:0',
                 'digits_between:0,1',
             ],
-            'smoker' => [
+            'smoker'   => [
                 'integer',
                 'min:0',
                 'digits_between:0,1',
-            ]
+            ],
         ];
     }
 
@@ -93,25 +93,25 @@ class Employee extends Model
      * Salary Main Plan calculator object.
      *
      * @var \App\Salary\SalaryMainPlan
-    */
+     */
     private $salaryMainPlan;
 
     /**
      * Salary Taxes Only Plan calculator object.
      *
      * @var \App\Salary\SalaryTaxesOnlyPlan
-    */
+     */
     private $salaryTaxesOnlyPlan;
 
     /**
      * Since Laravel does not allow to inject services into Model objects
      * we use global helper resolve() to get an instance of needed service.
-    */
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->salaryMainPlan = resolve(SalaryMainPlan::class);
+        $this->salaryMainPlan      = resolve(SalaryMainPlan::class);
         $this->salaryTaxesOnlyPlan = resolve(SalaryTaxesOnlyPlan::class);
     }
 
@@ -159,6 +159,7 @@ class Employee extends Model
                 $result = 'Full House';
                 break;
         }
+
         return $result;
     }
 

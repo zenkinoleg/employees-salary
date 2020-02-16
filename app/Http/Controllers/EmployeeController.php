@@ -18,6 +18,11 @@ class EmployeeController extends Controller
     /** @var \App\Entity\Employee */
     private $employee;
 
+    /**
+     * EmployeeController constructor.
+     *
+     * @param  \App\Entity\Employee  $employee
+     */
     public function __construct(Employee $employee)
     {
         $this->employee = $employee;
@@ -31,8 +36,8 @@ class EmployeeController extends Controller
     public function all()
     {
         return view('employees/index', [
-            'model' => $this->employee->all(),
-            'yesno_list' => YesNoList::LIST
+            'model'      => $this->employee->all(),
+            'yesno_list' => YesNoList::LIST,
         ]);
     }
 
@@ -63,7 +68,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $id = $request->input('id', 0);
+        $id    = $request->input('id', 0);
         $model = $id ? $this->employee->findOrFail($id) : new Employee;
         $this->validate($request, ($this->employee)::rules($id));
         $model->fill(
@@ -90,6 +95,8 @@ class EmployeeController extends Controller
         }
         $model->delete();
 
-        return redirect()->action('EmployeeController@all');
+        return redirect()->action(
+            'EmployeeController@all'
+        );
     }
 }
